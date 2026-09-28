@@ -1,0 +1,14 @@
+{
+  "_base": "https://raw.githubusercontent.com/alperta/murepl/main/samples/",
+  "tongue": {
+    "a3": "tongue/a3.wav",
+    "c4": "tongue/c4.wav",
+    "d4": "tongue/d4.wav",
+    "e4": "tongue/e4.wav",
+    "g4": "tongue/g4.wav",
+    "a4": "tongue/a4.wav",
+    "c5": "tongue/c5.wav",
+    "d5": "tongue/d5.wav",
+    "e5": "tongue/e5.wav"
+  }
+}
