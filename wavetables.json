@@ -1,0 +1,12 @@
+{
+  "_base": "https://cdn.jsdelivr.net/gh/alperta/murepl@main/wavetables/",
+  "pad_low": [
+    "pad_low.wav"
+  ],
+  "pad_mid": [
+    "pad_mid.wav"
+  ],
+  "pad_air": [
+    "pad_air.wav"
+  ]
+}
