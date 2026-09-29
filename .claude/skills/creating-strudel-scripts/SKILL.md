@@ -48,6 +48,16 @@ Expose one global object per script, named after the function: `globalThis.lufsM
 - **`raw.githubusercontent.com` serves `text/plain`, so Chrome refuses the module.** jsdelivr serves `application/javascript`. Use jsdelivr.
 - **`safeEval` wraps the editor's code in `(async () => {...})()`.** So `await import(...)` works at the top of the pane, and the last expression still returns the pattern.
 
+## The traps, measured on 2026-09-28 and 2026-09-29
+
+- **A module runs once per page, so a reset drops the sounds it registered.** Loading a pattern with a reset calls `resetLoadedSounds()` in `website/src/repl/useReplContext.jsx`, and a second `await import()` returns the cached module without running it. A script that calls `registerSound` tells the user to import it with `'?' + Date.now()` appended, which runs it on every evaluate.
+- **`white`, `pink` and `brown` loop one 2 s buffer, and every note starts it from sample 0.** `superdough/noise.mjs` caches the buffer per type, so two noise voices never decorrelate, and a noise drop replays the same grain each time. `crackle` is the exception: it builds a new buffer per note.
+- **`rand` returns the same number to every call at the same time.** `irand`, `degradeBy` and `rand.range` in one pattern correlate. Shift each one with `.early(Math.sqrt(n))`, and use `useRNG('precise')`, because the default `legacy` generator also repeats from cycle to cycle.
+- **Each orbit has one reverb, and it rebuilds whenever a note brings different settings.** The rebuild cuts the tail that was ringing, which clicks. Give each line with its own `room`, `rsize` or `rlp` its own `.orbit(n)`.
+- **A `.gain()` chained after a `register`ed stack replaces the gains inside it.** Chain `.velocity()`, which multiplies instead.
+- **The editor reads `.wt()` once per note, and the synth's amplitude envelope is linear.** Move the wavetable position with `.wtdepth()` and `.wtrate()`, which drive a triangle LFO. An exponential decay needs a sample or a custom `registerSound`.
+- **`strudelMirror.evaluate()` waits for a first click before it starts audio.** A headless browser clicks the page once before it evaluates.
+
 ## The panel, and failing out loud
 
 A script that draws nothing and says nothing wastes an hour. Follow these:
